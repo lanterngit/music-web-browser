@@ -1,6 +1,6 @@
 <template>
   <transition name="aside-fade">
-    <div class="yin-current-play" v-if="showAside">
+    <div class="cxk-current-play" v-if="showAside">
       <h2 class="title">当前播放</h2>
       <div class="control">共 {{ (currentPlayList && currentPlayList.length) || 0 }} 首</div>
       <ul class="menus">
@@ -57,5 +57,5 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/css/yin-current-play.scss";
+@import "@/assets/css/cxk-current-play.scss";
 </style>

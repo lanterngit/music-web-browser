@@ -1,6 +1,6 @@
 <template>
   <div class="play-list-container">
-    <yin-nav :styleList="singerStyle" :activeName="activeName" @click="handleChangeView"></yin-nav>
+    <cxk-nav :styleList="singerStyle" :activeName="activeName" @click="handleChangeView"></cxk-nav>
     <play-list :playList="data" path="singer-detail"></play-list>
     <el-pagination
       class="pagination"
@@ -17,7 +17,7 @@
 
 <script lang="ts" setup>
 import { ref, computed } from "vue";
-import YinNav from "@/components/layouts/YinNav.vue";
+import CxkNav from "@/components/layouts/CxkNav.vue";
 import PlayList from "@/components/PlayList.vue";
 import { singerStyle } from "@/enums";
 import { HttpManager } from "@/api";

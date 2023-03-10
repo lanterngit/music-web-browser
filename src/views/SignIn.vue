@@ -1,5 +1,5 @@
 <template>
-  <yin-login-logo></yin-login-logo>
+  <cxk-login-logo></cxk-login-logo>
   <div class="sign">
     <div class="sign-head">
       <span>帐号登录</span>
@@ -22,13 +22,13 @@
 <script lang="ts">
 import { defineComponent, reactive, getCurrentInstance } from "vue";
 import mixin from "@/mixins/mixin";
-import YinLoginLogo from "@/components/layouts/YinLoginLogo.vue";
+import CxkLoginLogo from "@/components/layouts/CxkLoginLogo.vue";
 import { HttpManager } from "@/api";
 import { NavName, RouterName, SignInRules } from "@/enums";
 
 export default defineComponent({
   components: {
-    YinLoginLogo,
+    CxkLoginLogo,
   },
   setup() {
     const { proxy } = getCurrentInstance();

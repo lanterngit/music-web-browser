@@ -10,8 +10,8 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/",
-    name: "yin-container",
-    component: () => import("@/views/YinContainer.vue"),
+    name: "cxk-container",
+    component: () => import("@/views/CxkContainer.vue"),
     children: [
       {
         path: "/",

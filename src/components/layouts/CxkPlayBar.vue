@@ -1,7 +1,7 @@
 <template>
   <div class="play-bar" :class="{ show: !toggle }">
     <div class="fold" :class="{ turn: toggle }">
-      <yin-icon :icon="iconList.ZHEDIE" @click="toggle = !toggle"></yin-icon>
+      <cxk-icon :icon="iconList.ZHEDIE" @click="toggle = !toggle"></cxk-icon>
     </div>
     <!--播放进度-->
     <el-slider class="progress" v-model="nowTime" @change="changeTime" size="small"></el-slider>
@@ -16,20 +16,20 @@
         </div>
       </div>
       <div class="song-ctr">
-        <yin-icon class="yin-play-show" :icon="playStateList[playStateIndex]" @click="changePlayState"></yin-icon>
+        <cxk-icon class="cxk-play-show" :icon="playStateList[playStateIndex]" @click="changePlayState"></cxk-icon>
         <!--上一首-->
-        <yin-icon class="yin-play-show" :icon="iconList.SHANGYISHOU" @click="prev"></yin-icon>
+        <cxk-icon class="cxk-play-show" :icon="iconList.SHANGYISHOU" @click="prev"></cxk-icon>
         <!--播放-->
-        <yin-icon :icon="playBtnIcon" @click="togglePlay"></yin-icon>
+        <cxk-icon :icon="playBtnIcon" @click="togglePlay"></cxk-icon>
         <!--下一首-->
-        <yin-icon class="yin-play-show" :icon="iconList.XIAYISHOU" @click="next"></yin-icon>
+        <cxk-icon class="cxk-play-show" :icon="iconList.XIAYISHOU" @click="next"></cxk-icon>
         <!--音量-->
-        <el-dropdown class="yin-play-show" trigger="click">
-          <yin-icon v-if="volume !== 0" :icon="iconList.YINLIANG"></yin-icon>
-          <yin-icon v-else :icon="iconList.JINGYIN"></yin-icon>
+        <el-dropdown class="cxk-play-show" trigger="click">
+          <cxk-icon v-if="volume !== 0" :icon="iconList.YINLIANG"></cxk-icon>
+          <cxk-icon v-else :icon="iconList.JINGYIN"></cxk-icon>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-slider class="yin-slider" style="height: 150px; margin: 10px 0" v-model="volume"
+              <el-slider class="cxk-slider" style="height: 150px; margin: 10px 0" v-model="volume"
                          :vertical="true"></el-slider>
             </el-dropdown-menu>
           </template>
@@ -37,15 +37,15 @@
       </div>
       <div class="song-ctr song-edit">
         <!--收藏-->
-        <yin-icon
-            class="yin-play-show"
+        <cxk-icon
+            class="cxk-play-show"
             :class="{ active: isCollection }"
             :icon="isCollection ? iconList.like : iconList.dislike"
             @click="changeCollection"
-        ></yin-icon>
+        ></cxk-icon>
         <!--下载-->
-        <yin-icon
-            class="yin-play-show"
+        <cxk-icon
+            class="cxk-play-show"
             :icon="iconList.download"
             @click="
             downloadMusic({
@@ -53,9 +53,9 @@
               songName: singerName + '-' + songTitle,
             })
           "
-        ></yin-icon>
+        ></cxk-icon>
         <!--歌曲列表-->
-        <yin-icon :icon="iconList.LIEBIAO" @click="changeAside"></yin-icon>
+        <cxk-icon :icon="iconList.LIEBIAO" @click="changeAside"></cxk-icon>
       </div>
     </div>
   </div>
@@ -65,14 +65,14 @@
 import {computed, defineComponent, getCurrentInstance, onMounted, ref, watch} from "vue";
 import {mapGetters, useStore} from "vuex";
 import mixin from "@/mixins/mixin";
-import YinIcon from "./YinIcon.vue";
+import CxkIcon from "./CxkIcon.vue";
 import {HttpManager} from "@/api";
 import {formatSeconds} from "@/utils";
 import {Icon, RouterName} from "@/enums";
 
 export default defineComponent({
   components: {
-    YinIcon,
+    CxkIcon,
   },
   setup() {
     const {proxy} = getCurrentInstance();
@@ -266,5 +266,5 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/css/yin-play-bar.scss";
+@import "@/assets/css/cxk-play-bar.scss";
 </style>

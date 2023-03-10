@@ -1,29 +1,29 @@
 <template>
   <el-container>
     <el-header>
-      <yin-header></yin-header>
+      <cxk-header></cxk-header>
     </el-header>
     <el-main>
       <router-view />
-      <yin-current-play></yin-current-play>
-      <yin-play-bar></yin-play-bar>
-      <yin-scroll-top></yin-scroll-top>
-      <yin-audio></yin-audio>
+      <cxk-current-play></cxk-current-play>
+      <cxk-play-bar></cxk-play-bar>
+      <cxk-scroll-top></cxk-scroll-top>
+      <cxk-audio></cxk-audio>
     </el-main>
     <el-footer>
-      <yin-footer></yin-footer>
+      <cxk-footer></cxk-footer>
     </el-footer>
   </el-container>
 </template>
 
 <script lang="ts" setup>
 import { getCurrentInstance } from "vue";
-import YinHeader from "@/components/layouts/YinHeader.vue";
-import YinCurrentPlay from "@/components/layouts/YinCurrentPlay.vue";
-import YinPlayBar from "@/components/layouts/YinPlayBar.vue";
-import YinScrollTop from "@/components/layouts/YinScrollTop.vue";
-import YinFooter from "@/components/layouts/YinFooter.vue";
-import YinAudio from "@/components/layouts/YinAudio.vue";
+import CxkHeader from "@/components/layouts/CxkHeader.vue";
+import CxkCurrentPlay from "@/components/layouts/CxkCurrentPlay.vue";
+import CxkPlayBar from "@/components/layouts/CxkPlayBar.vue";
+import CxkScrollTop from "@/components/layouts/CxkScrollTop.vue";
+import CxkFooter from "@/components/layouts/CxkFooter.vue";
+import CxkAudio from "@/components/layouts/CxkAudio.vue";
 
 const { proxy } = getCurrentInstance();
 

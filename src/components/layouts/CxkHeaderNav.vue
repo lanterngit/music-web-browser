@@ -1,5 +1,5 @@
 <template>
-  <ul class="yin-header-nav">
+  <ul class="cxk-header-nav">
     <li :class="{ active: item.name === activeName }" v-for="item in styleList" :key="item.path" @click="handleChangeView(item)">
       {{ item.name }}
     </li>

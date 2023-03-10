@@ -19,7 +19,7 @@
       </div>
       <!--这特么是直接拿到了评论的id-->
       <div ref="up" class="comment-ctr" @click="setSupport(item.id, item.up,userId)">
-        <div><yin-icon :icon="iconList.Support"></yin-icon> {{ item.up }}</div>
+        <div><cxk-icon :icon="iconList.Support"></cxk-icon> {{ item.up }}</div>
         <el-icon v-if="item.userId === userId" @click="deleteComment(item.id, index)"><delete /></el-icon>
       </div>
     </li>
@@ -30,7 +30,7 @@
 import { defineComponent, getCurrentInstance, ref, toRefs, computed, watch, reactive, onMounted } from "vue";
 import { useStore } from "vuex";
 import { Delete } from "@element-plus/icons-vue";
-import YinIcon from "@/components/layouts/YinIcon.vue";
+import CxkIcon from "@/components/layouts/CxkIcon.vue";
 import mixin from "@/mixins/mixin";
 import { HttpManager } from "@/api";
 import { Icon } from "@/enums";
@@ -38,7 +38,7 @@ import { formatDate } from "@/utils";
 
 export default defineComponent({
   components: {
-    YinIcon,
+    CxkIcon,
     Delete,
   },
   props: {

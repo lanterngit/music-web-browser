@@ -46,7 +46,7 @@
 <script lang="ts">
 import { defineComponent, reactive, getCurrentInstance } from "vue";
 import mixin from "@/mixins/mixin";
-import YinLoginLogo from "@/components/layouts/YinLoginLogo.vue";
+import YinLoginLogo from "@/components/layouts/CxkLoginLogo.vue";
 import { HttpManager } from "@/api";
 import { getBirth } from "@/utils";
 import { AREA, RouterName, NavName, SignUpRules } from "@/enums";

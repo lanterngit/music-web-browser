@@ -1,43 +1,194 @@
 <template>
-<!--  <el-row>-->
-<!--    <el-col :span="6">-->
-<!--      <span>-->
-<!--        icon-->
-<!--      </span>-->
-<!--      <span>Cxk-Music</span>-->
-<!--    </el-col>-->
-<!--    <el-col :span="3">首页</el-col>-->
-<!--    <el-col :span="3">歌单</el-col>-->
-<!--    <el-col :span="3">歌手</el-col>-->
-<!--    <el-col :span="3">搜索</el-col>-->
-<!--    <el-col :span="3">登录</el-col>-->
-<!--    <el-col :span="3">注册</el-col>-->
-<!--  </el-row>-->
   <div class="cxk-header">
-    <div class="header-logo">
-      <span class="header-icon"></span>
-      <span>
-        {{websiteName}}
-      </span>
+    <!--图标-->
+    <div class="header-logo" @click="goPage()">
+      <cxk-icon :icon="iconList.ERJI"></cxk-icon>
+      <span>{{ musicName }}</span>
     </div>
-
-
+    <cxk-header-nav class="cxk-header-nav" :styleList="headerNavList" :activeName="activeNavName" @click="goPage"></cxk-header-nav>
+    <!--搜索框-->
+    <div class="header-search">
+      <el-input placeholder="搜索" :prefix-icon="Search" v-model="keywords" @keyup.enter="goSearch()" />
+    </div>
+    <!--设置-->
+    <cxk-header-nav v-if="!token" :styleList="signList" :activeName="activeNavName" @click="goPage"></cxk-header-nav>
+    <el-dropdown class="user-wrap" v-if="token" trigger="click">
+      <el-image class="user" fit="contain" :src="attachImageUrl(userPic)" />
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item v-for="(item, index) in menuList" :key="index" @click.stop="goMenuList(item.path)">{{ item.name }}</el-dropdown-item>
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
   </div>
 </template>
 
-<script lang="ts" setup>
-import {ref} from "vue";
+<script lang="ts">
+import { defineComponent, ref, getCurrentInstance, computed, reactive } from "vue";
+import { Search } from "@element-plus/icons-vue";
+import { useStore } from "vuex";
+import CxkIcon from "./CxkIcon.vue";
+import CxkHeaderNav from "./CxkHeaderNav.vue";
+import mixin from "@/mixins/mixin";
+import { HEADERNAVLIST, SIGNLIST, MENULIST, Icon, MUSICNAME, RouterName, NavName } from "@/enums";
+import { HttpManager } from "@/api";
 
-const websiteName = ref("Cxk-Music")
+export default defineComponent({
+  components: {
+    CxkIcon,
+    CxkHeaderNav,
+  },
+  setup() {
+    const { proxy } = getCurrentInstance();
+    const store = useStore();
+    const { changeIndex, routerManager } = mixin();
+
+    const musicName = ref(MUSICNAME);
+    const headerNavList = ref(HEADERNAVLIST); // 左侧导航栏
+    const signList = ref(SIGNLIST); // 右侧导航栏
+    const menuList = ref(MENULIST); // 用户下拉菜单项
+    const iconList = reactive({
+      ERJI: Icon.ERJI,
+    });
+    const keywords = ref("");
+    const activeNavName = computed(() => store.getters.activeNavName);
+    const userPic = computed(() => store.getters.userPic);
+    const token = computed(() => store.getters.token);
+
+    function goPage(path, name) {
+      if (!path && !name) {
+        changeIndex(NavName.Home);
+        routerManager(RouterName.Home, { path: RouterName.Home });
+      } else {
+        changeIndex(name);
+        routerManager(path, { path });
+      }
+    }
+
+    function goMenuList(path) {
+      if (path == RouterName.SignOut) {
+        proxy.$store.commit("setToken", false);
+        changeIndex(NavName.Home);
+        routerManager(RouterName.Home, { path: RouterName.Home });
+      } else {
+        routerManager(path, { path });
+      }
+    }
+    function goSearch() {
+      if (keywords.value !== "") {
+        proxy.$store.commit("setSearchWord", keywords.value);
+        routerManager(RouterName.Search, { path: RouterName.Search, query: { keywords: keywords.value } });
+      } else {
+        (proxy as any).$message({
+          message: "搜索内容不能为空",
+          type: "error",
+        });
+      }
+    }
+
+    return {
+      musicName,
+      headerNavList,
+      signList,
+      menuList,
+      iconList,
+      keywords,
+      activeNavName,
+      userPic,
+      token,
+      Search,
+      goPage,
+      goMenuList,
+      goSearch,
+      attachImageUrl: HttpManager.attachImageUrl,
+    };
+  },
+});
 </script>
 
-<style lang="less" scoped>
-.cxk-header{
+<style lang="scss" scoped>
+@import "@/assets/css/var.scss";
+@import "@/assets/css/global.scss";
+
+@media screen and (min-width: $sm) {
+  .header-logo {
+    margin: 0 1rem;
+  }
+}
+
+@media screen and (max-width: $sm) {
+  .header-logo {
+    margin: 0 1rem;
+    span {
+      display: none;
+    }
+  }
+  .header-search {
+    display: none;
+  }
+}
+
+.cxk-header {
+  position: fixed;
+  width: 100%;
+  height: $header-height;
+  line-height: $header-height;
+  padding: $header-padding;
+  margin: $header-margin;
+  background-color: $theme-header-color;
+  box-shadow: $box-shadow;
+  box-sizing: border-box;
+  z-index: 100;
   display: flex;
-  flex-flow: nowrap;
   white-space: nowrap;
-  .header-logo{
-    background-color: skyblue;
+  flex-wrap: nowrap;
+}
+
+/* LOGO */
+.header-logo {
+  font-size: $font-size-logo;
+  font-weight: bold;
+  cursor: pointer;
+  .icon {
+    @include icon(1.9rem, $color-black);
+    vertical-align: middle;
+  }
+  span {
+    margin-left: 1rem;
+  }
+}
+
+.cxk-header-nav {
+  flex: 1;
+}
+
+/*搜索输入框*/
+.header-search {
+  margin: 0 20px;
+  width: 100%;
+  &::v-deep input {
+    text-indent: 5px;
+    max-width: $header-search-max-width;
+    min-width: $header-search-min-width;
+    border-radius: $header-search-radius;
+    box-shadow: none;
+    background-color: $color-light-grey;
+    color: $color-black;
+  }
+}
+
+/*用户*/
+.user-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .user {
+    width: $header-user-width;
+    height: $header-user-width;
+    border-radius: $header-user-radius;
+    margin-right: $header-user-margin;
+    cursor: pointer;
   }
 }
 </style>
