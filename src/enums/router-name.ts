@@ -13,4 +13,6 @@ export const enum RouterName {
   Lyric = "/lyric",
   Error = "/404",
   SignOut = "0",
+  Recommend = "/recommend",
+  CampusSinger= '/campusSinger'
 }

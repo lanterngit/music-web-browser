@@ -58,8 +58,10 @@ export default defineComponent({
 
     // 收集歌单里面的歌曲
     async function getSongId(id) {
+        console.log('id@@@@@@@@@@',id)
       const result = (await HttpManager.getListSongOfSongId(id)) as ResponseBody;
       // 获取歌单里的歌曲信息
+           await HttpManager.updateCount(id)
       for (const item of result.data) {
         // 获取单里的歌曲
         const resultSong = (await HttpManager.getSongOfId(item.songId)) as ResponseBody;

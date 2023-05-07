@@ -19,10 +19,10 @@ export default defineComponent({
     const store = useStore();
 
     const currentSongList = ref([]); // 存放的音乐
-    // const searchWord = computed(() => store.getters.searchWord);
-    // watch(searchWord, (value) => {
-    //   searchSong(value);
-    // });
+    const searchWord = computed(() => store.getters.searchWord);
+    watch(searchWord, (value) => {
+      searchSong(value);
+    });
 
     // 搜索音乐
     async function searchSong(value) {

@@ -9,6 +9,8 @@ export const enum NavName {
   SignIn = "登录",
   SignUp = "注册",
   SignOut = "退出",
+  Recommend = "排行榜",
+  CampusSinger = "校园歌手"
 }
 
 // 左侧导航栏
@@ -24,6 +26,14 @@ export const HEADERNAVLIST = [
   {
     name: NavName.Singer,
     path: RouterName.Singer,
+  },
+  {
+    name: NavName.Recommend,
+    path: RouterName.Recommend,
+  },
+  {
+    name: NavName.CampusSinger,
+    path: RouterName.CampusSinger,
   },
 ];
 
