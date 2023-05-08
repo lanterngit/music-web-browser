@@ -2,6 +2,7 @@ import axios from "axios";
 import router from "@/router";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL
+// const BASE_URL = 'http://localhost:8888'
 
 axios.defaults.timeout = 5000; // 超时时间设置
 axios.defaults.withCredentials = true; // true允许跨域

@@ -91,7 +91,8 @@ const HttpManager = {
   //获取所有的海报
   getBannerList: () => get("banner/getAllBanner"),
   getRecommendSong: () => get("getCount"),
-  updateCount: (id) => get(`updateCount?id=${id}`)
+  updateCount: (id) => get(`updateCount?id=${id}`),
+  getSchoolSong: () => get(`schoolSong`),
 };
 
 
