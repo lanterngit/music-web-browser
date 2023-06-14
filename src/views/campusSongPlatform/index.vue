@@ -3,6 +3,7 @@
         <div class="left">
             <div class="title">今日已点单歌曲：</div>
             <el-table :data="dataList" @row-click="handleClick">
+                <el-table-column prop="index" label="序号" width="80" />
                 <el-table-column prop="songName" label="歌曲" />
                 <el-table-column prop="singerName" label="歌手" />
                 <el-table-column prop="introduction" label="专辑" />
@@ -10,59 +11,25 @@
         </div>
         <div class="right">
             <div class="title">歌曲点单：</div>
-            <el-form :model="form" label-width="120px">
+            <el-form id="add-song" label-width="120px" :model="form">
                 <el-form-item label="歌曲名">
-                    <el-input v-model="form.name" />
+                    <el-input type="text" name="name" v-model="form.name"></el-input>
                 </el-form-item>
-                <el-form-item label="Activity zone">
-                    <el-select v-model="form.region" placeholder="please select your zone">
-                        <el-option label="Zone one" value="shanghai" />
-                        <el-option label="Zone two" value="beijing" />
-                    </el-select>
+                <el-form-item label="专辑">
+                    <el-input type="text" name="introduction" v-model="form.introduction"></el-input>
                 </el-form-item>
-                <el-form-item label="Activity time">
-                    <el-col :span="11">
-                        <el-date-picker
-                                v-model="form.date1"
-                                type="date"
-                                placeholder="Pick a date"
-                                style="width: 100%"
-                        />
-                    </el-col>
-                    <el-col :span="2" class="text-center">
-                        <span class="text-gray-500">-</span>
-                    </el-col>
-                    <el-col :span="11">
-                        <el-time-picker
-                                v-model="form.date2"
-                                placeholder="Pick a time"
-                                style="width: 100%"
-                        />
-                    </el-col>
+                <el-form-item label="歌手">
+                    <el-input type="text" name="singer" v-model="form.singerName"></el-input>
                 </el-form-item>
-                <el-form-item label="Instant delivery">
-                    <el-switch v-model="form.delivery" />
+                <el-form-item label="歌词">
+                    <el-input type="textarea" name="lyric" v-model="form.lyric"></el-input>
                 </el-form-item>
-                <el-form-item label="Activity type">
-                    <el-checkbox-group v-model="form.type">
-                        <el-checkbox label="Online activities" name="type" />
-                        <el-checkbox label="Promotion activities" name="type" />
-                        <el-checkbox label="Offline activities" name="type" />
-                        <el-checkbox label="Simple brand exposure" name="type" />
-                    </el-checkbox-group>
-                </el-form-item>
-                <el-form-item label="Resources">
-                    <el-radio-group v-model="form.resource">
-                        <el-radio label="Sponsor" />
-                        <el-radio label="Venue" />
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="Activity form">
-                    <el-input v-model="form.desc" type="textarea" />
+                <el-form-item label="歌曲上传">
+                    <input type="file" name="file"/>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="onSubmit">Create</el-button>
-                    <el-button>Cancel</el-button>
+                    <el-button type="primary" @click="onSubmit">确认点单</el-button>
+                    <el-button @click="reset(form)">重置点单</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -92,29 +59,16 @@ export default defineComponent({
 
 
     setup(props) {
-        const { getSongTitle, getSingerName, playMusic, checkStatus, downloadMusic } = mixin();
+        const { playMusic, checkStatus, downloadMusic } = mixin();
         const { proxy } = getCurrentInstance();
         const store = useStore();
 
         const { songList } = toRefs(props);
-        const form = reactive({
-                name: '',
-                region: '',
-                date1: '',
-                date2: '',
-                delivery: false,
-                type: [],
-                resource: '',
-                desc: '',
-            })
+        const form = reactive({name: '', singerName: '', introduction: '', lyric: ''})
         const iconList = reactive({
             dislike: Icon.Dislike,
             like: Icon.Like,
         });
-
-        const songUrl = computed(() => store.getters.songUrl);
-        const singerName = computed(() => store.getters.singerName);
-        const songTitle = computed(() => store.getters.songTitle);
         const dataList = ref([])
         onMounted(()=>{
             getSchoolSong()
@@ -122,11 +76,12 @@ export default defineComponent({
         async function getSchoolSong(){
             try {
                 const result = (await HttpManager.getSchoolSong()) as ResponseBody;
-                result.data.forEach((item) => {
-                        item.songName=item.name.split("-")[1]
-                        item.singerName=item.name.split("-")[0]
+                result.data.forEach((item,index) => {
+                    item.songName=item.name.split("-")[1]
+                    item.singerName=item.name.split("-")[0]
+                    item.index = index + 1
                 })
-                dataList.value =result.data.splice(0,9)
+                dataList.value =result.data.splice(0,15)
                 console.log('data@@@@',dataList.value)
             } catch (error) {
                 console.error(error);
@@ -144,7 +99,29 @@ export default defineComponent({
             });
         }
         function onSubmit(){
-            console.log('submit!')
+            const addSongForm = new FormData(document.getElementById("add-song") as HTMLFormElement)
+            if (!addSongForm.get("lyric")) addSongForm.set("lyric", "[00:00:00]暂无歌词")
+
+            const req = new XMLHttpRequest()
+            req.onreadystatechange = () => {
+                if (req.readyState === 4 && req.status === 200) {
+                    let res = JSON.parse(req.response);
+                    (proxy as any).$message({
+                        message: res.message,
+                        type: res.type,
+                    });
+                    if (res.success) {
+                        getSchoolSong()
+                        form.name = ""
+                        form.singerName = ""
+                        form.introduction = ""
+                        form.lyric = ""
+                    }
+                }
+            }
+        }
+        function reset(form:object){
+            form = {};
         }
         function handleEdit(row) {
             console.log("row", row);
@@ -152,34 +129,19 @@ export default defineComponent({
 
         const userId = computed(() => store.getters.userId);
 
-        async function deleteCollection({ id }) {
-            if (!checkStatus()) return;
-
-            const result = (await HttpManager.deleteCollection(userId.value, id)) as ResponseBody;
-            (proxy as any).$message({
-                message: result.message,
-                type: result.type,
-            });
-
-            if (result.data === false) proxy.$emit("changeData", result.data);
-        }
-
         return {
             dataList,
             form,
             iconList,
             Delete,
             Download,
-            songUrl,
-            singerName,
-            songTitle,
             handleClick,
             handleEdit,
             downloadMusic,
-            deleteCollection,
             onSubmit,
+            reset
         };
-    },
+    }
 });
 </script>
 
@@ -193,8 +155,6 @@ export default defineComponent({
 .left{
     flex: 1;
     margin-right: 4rem;
-}
-.right{
 }
 .title{
     font-size: 1.5rem;

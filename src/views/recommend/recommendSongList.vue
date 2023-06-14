@@ -21,7 +21,7 @@ export default defineComponent({
     async function getRecommendSong() {
         console.log('触发了')
       const result = (await HttpManager.getRecommendSong()) as ResponseBody;
-      let data = result.data.splice(0,9)
+      let data = result.data.splice(0,10)
       if (!result.data.length) {
         (proxy as any).$message({
           message: "暂无该歌曲内容",
